@@ -37,11 +37,14 @@ def get_list(url):
 
     if response is not None:
         html = BeautifulSoup(response, 'html.parser')
-        name_box = html.find('h3', attrs={'class': 's-h3 u-fontSize19 u-fontWeight600'})
+        with open("untitled.html", "w+") as f:
+            f.write(str(html))
+        name_box = html.select("h3[class*='s-h3']")#.select is for css selectors -- Don't use Xpath with is what .find uses
+        print(name_box)
         names = set()
         for name in name_box:
             if len(name) > 0:
-                names.add(name_box.text.strip())
+                names.add(name_box.text.strip())#there is still a bug in here 
         return list(names)
 
     raise Exception('Error retrieving contents at {}'.format(url))
