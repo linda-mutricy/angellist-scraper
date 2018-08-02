@@ -1,6 +1,7 @@
 __author__ = 'linda-ge'
 
 import re
+import csv
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
@@ -40,14 +41,20 @@ def get_list(url):
         with open("untitled.html", "w+") as f:
             f.write(str(html))
         name_box = html.select("h3[class*='s-h3']")#.select is for css selectors -- Don't use Xpath with is what .find uses
-        print(name_box)
-        names = set()
+        # print(name_box)
+        names = []
         for name in name_box:
             if len(name) > 0:
-                names.add(name_box.text.strip())#there is still a bug in here 
-        return list(names)
+                names.append(name.text.strip())
+        return write_to_csv(names)
 
     raise Exception('Error retrieving contents at {}'.format(url))
+
+def write_to_csv(names):
+    with open("output.csv", 'wb') as result_file:
+        wr = csv.writer(result_file, dialect = 'excel')
+        wr.writerow(names) #type_error: a bytes-like object is required, not 'str'
+
 
 webpage = input('Enter requested URL for scrape: ')
 get_list(webpage)
