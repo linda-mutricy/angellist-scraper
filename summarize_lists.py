@@ -1,6 +1,5 @@
 __author__ = 'linda-ge'
 
-import re
 import csv
 from requests import get
 from requests.exceptions import RequestException
@@ -33,28 +32,28 @@ def log_error(e):
     """Prints the error returned in simple_get."""
     print(e)
 
-def get_list(url):
+def get_list(url, filename):
+    """
+    Creates a simple 2D array of the companies on the given webpage to pass into write_to_csv.
+    """
     response = simple_get(url)
 
     if response is not None:
         html = BeautifulSoup(response, 'html.parser')
-        with open("untitled.html", "w+") as f:
-            f.write(str(html))
-        name_box = html.select("h3[class*='s-h3']")#.select is for css selectors -- Don't use Xpath with is what .find uses
-        # print(name_box)
-        names = []
-        for name in name_box:
-            if len(name) > 0:
-                names.append(name.text.strip())
-        return write_to_csv(names)
+        companies = [[h3.find("a").contents[0]] for h3 in html.select("h3[class*='s-h3']")]
+        return write_to_csv(companies, filename)
 
     raise Exception('Error retrieving contents at {}'.format(url))
 
-def write_to_csv(names):
-    with open("output.csv", 'wb') as result_file:
-        wr = csv.writer(result_file, dialect = 'excel')
-        wr.writerow(names) #type_error: a bytes-like object is required, not 'str'
+def write_to_csv(names, filename):
+    filename = str(filename)
+    with open(str(filename) + ".csv", 'w') as result_file:
+        wr = csv.writer(result_file, delimiter = ",")
+        wr.writerows(names)
 
+def main():
+    webpage = input('Enter requested URL for scrape: ')
+    file_name = webpage.rsplit('/', 1)[-1]
+    get_list(webpage, file_name)
 
-webpage = input('Enter requested URL for scrape: ')
-get_list(webpage)
+main()
