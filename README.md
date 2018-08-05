@@ -2,13 +2,13 @@
 
 This program scrapes [the AngelList Job Collections directories](https://angel.co/job-collections/), making it easier to find names and paste them into a spreadsheet without endlessly scrolling.
 
-### Prerequisites:
+### Dependencies
 ```
-requests
-BeautifulSoup
+pip3 install requests
+pip3 install BeautifulSoup
 ```
 
-### Running the program:
+### Running the program
 Download the folder and type the below into your terminal:
 
 ```

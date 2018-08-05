@@ -46,6 +46,9 @@ def get_list(url, filename):
     raise Exception('Error retrieving contents at {}'.format(url))
 
 def write_to_csv(names, filename):
+    """
+    Writes the input 2D array into a CSV file.
+    """
     filename = str(filename)
     with open(str(filename) + ".csv", 'w') as result_file:
         wr = csv.writer(result_file, delimiter = ",")
